@@ -1,0 +1,6 @@
+# config/cycles.yaml
+cycles:
+  max_cycles: 10
+  max_reflect: 3
+  require_human_approval: true
+

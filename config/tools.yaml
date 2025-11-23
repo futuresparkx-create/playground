@@ -1,0 +1,13 @@
+# config/tools.yaml`
+
+tools:
+  enable:
+    - code_generation
+    - static_analysis
+    - reflection
+    - dataset_logging
+
+  disabled:
+    - autonomous_execution
+    - remote_actions
+    - weight_updates

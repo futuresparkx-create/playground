@@ -1,0 +1,8 @@
+# config/model.yaml
+
+model:
+  name: deepseek_coder_v3
+  engine: sgllang_trt
+  max_tokens: 8192
+  temperature: 0.1
+  top_p: 0.95
