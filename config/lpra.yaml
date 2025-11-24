@@ -1,0 +1,304 @@
+# LPRA Cognitive Contract Configuration
+# Long-term Persistent Reasoning Architecture operational parameters
+
+# Version and metadata
+version: "1.0.0"
+schema_version: "1.0"
+last_updated: "2025-11-23"
+description: "Cognitive contract defining operational parameters for LPRA system"
+
+# === LAYER 1: SEMANTIC GRAPH LAYER ===
+semantic_graph:
+  # Maximum context sizes
+  max_graph_nodes: 10000
+  max_edges_per_node: 100
+  max_total_edges: 50000
+  
+  # Node management
+  node_creation_rate_limit: 100  # per hour
+  max_node_content_size: 10240   # bytes
+  max_node_description_length: 500
+  
+  # Reinforcement operators
+  success_boost: 1.2
+  failure_penalty: 0.8
+  usage_reinforcement: 1.1
+  max_reinforcement_factor: 2.0
+  min_reinforcement_factor: 0.1
+  
+  # Decay function parameters
+  base_decay_rate: 0.95
+  time_decay_factor: 0.001
+  minimum_strength: 0.1
+  decay_application_interval_hours: 1.0
+  
+  # Pruning thresholds
+  edge_strength_threshold: 0.2
+  node_relevance_threshold: 0.15
+  max_pruning_per_cycle: 100
+  pruning_interval_hours: 6.0
+  preserve_node_types:
+    - "goal"
+    - "human_operator"
+    - "milestone"
+  
+  # Clustering parameters
+  clustering_threshold: 0.7
+  min_cluster_size: 3
+  max_clusters: 1000
+  cluster_update_interval_hours: 12.0
+  
+  # Node type hierarchy weights
+  type_importance_weights:
+    goal: 2.0
+    human_operator: 1.8
+    milestone: 1.6
+    outcome: 1.4
+    decision: 1.2
+    ai_agent: 1.0
+    pattern: 1.0
+    principle: 1.0
+    strategy: 1.0
+    code_file: 0.8
+    function: 0.8
+    class: 0.8
+    test_case: 0.6
+    action: 0.6
+    external_system: 0.4
+    objective: 1.2
+
+# === LAYER 2: STRUCTURED STATE LAYER ===
+structured_state:
+  # State computation
+  consistency_level: "strict"  # none, basic, strict, paranoid
+  state_computation_timeout_seconds: 30
+  max_state_size_mb: 100
+  
+  # Storage configuration
+  sqlite_db_path: "data/lpra_states.db"
+  lancedb_path: "data/lpra_vectors"
+  backup_interval_hours: 24
+  
+  # State versioning
+  schema_versions:
+    - "0.1"  # baseline
+    - "0.2"  # hierarchical
+    - "0.3"  # multiagent
+    - "1.0"  # stable
+  current_version: "1.0"
+  auto_migration: true
+  
+  # Cleanup and maintenance
+  max_stored_states: 1000
+  cleanup_interval_hours: 168  # weekly
+  state_retention_days: 90
+  
+  # Performance thresholds
+  max_derivation_time_ms: 5000
+  integrity_score_threshold: 0.7
+  consistency_check_interval_hours: 6
+
+# === LAYER 3: SURFACE CONTEXT LAYER ===
+surface_context:
+  # Context window management
+  max_context_tokens: 32000
+  default_llm_context_tokens: 4000
+  human_summary_max_length: 2000
+  
+  # Compression strategies
+  default_compression_strategy: "relevance_based"
+  available_strategies:
+    - "relevance_based"
+    - "temporal_sliding"
+    - "hierarchical"
+    - "attention_guided"
+    - "token_optimized"
+  
+  # Relevance-based compression
+  relevance_threshold: 0.5
+  max_relevant_nodes: 50
+  max_relevant_edges: 100
+  
+  # Temporal sliding window
+  temporal_window_hours: 24.0
+  max_temporal_nodes: 100
+  
+  # Attention mechanisms
+  attention_focus_threshold: 0.7
+  attention_decay_rate: 0.95
+  max_attention_weights: 200
+  
+  # Caching
+  cache_ttl_minutes: 30
+  max_cached_contexts: 100
+  cache_cleanup_interval_minutes: 60
+  
+  # Human summaries
+  summary_types:
+    - "progress"
+    - "debug"
+    - "technical"
+    - "dashboard"
+  default_summary_type: "progress"
+  include_emojis: true
+  include_recommendations: true
+
+# === SYSTEM INTEGRATION ===
+integration:
+  # Orchestrator integration
+  orchestrator_update_interval_seconds: 10
+  max_concurrent_operations: 5
+  operation_timeout_seconds: 300
+  
+  # Model factory integration
+  model_lifecycle_management: true
+  model_cache_size_mb: 1024
+  model_cleanup_interval_hours: 4
+  
+  # Configuration management
+  config_reload_interval_minutes: 15
+  config_validation_strict: true
+  config_backup_enabled: true
+
+# === PERFORMANCE AND MONITORING ===
+performance:
+  # Memory management
+  max_memory_usage_mb: 2048
+  memory_check_interval_seconds: 60
+  memory_cleanup_threshold: 0.8
+  
+  # Processing limits
+  max_processing_time_seconds: 600
+  max_concurrent_requests: 10
+  request_queue_size: 100
+  
+  # Monitoring thresholds
+  error_rate_threshold: 0.05
+  response_time_threshold_ms: 1000
+  availability_threshold: 0.99
+  
+  # Logging
+  log_level: "INFO"
+  log_retention_days: 30
+  performance_logging: true
+  detailed_metrics: false
+
+# === SECURITY AND SAFETY ===
+security:
+  # Input validation
+  max_input_size_bytes: 1048576  # 1MB
+  input_sanitization: true
+  dangerous_pattern_detection: true
+  
+  # Rate limiting
+  api_rate_limit_per_hour: 1000
+  graph_modification_rate_limit: 100
+  state_query_rate_limit: 500
+  
+  # Access control
+  require_authentication: false
+  audit_logging: true
+  sensitive_data_masking: true
+  
+  # Safety mechanisms
+  auto_shutdown_on_error: false
+  max_consecutive_errors: 10
+  circuit_breaker_enabled: true
+
+# === EVENT LIFECYCLE RULES ===
+event_lifecycle:
+  # Event creation
+  require_timestamp: true
+  require_actor: true
+  require_context: true
+  max_event_size_bytes: 10240
+  
+  # Event validation
+  validation_enabled: true
+  consistency_checking: true
+  duplicate_detection: true
+  
+  # Event propagation
+  auto_propagate_relationships: true
+  max_propagation_depth: 5
+  propagation_timeout_seconds: 10
+  
+  # Event decay and archival
+  event_decay_enabled: true
+  event_retention_days: 365
+  archival_compression: true
+  
+  # Event types and priorities
+  event_type_priorities:
+    outcome: 10
+    decision: 9
+    milestone: 8
+    goal: 7
+    action: 6
+    pattern: 5
+    principle: 4
+    strategy: 3
+    objective: 2
+    default: 1
+
+# === MIGRATION AND VERSIONING ===
+migration:
+  # Schema migration
+  auto_migrate_on_startup: true
+  backup_before_migration: true
+  migration_timeout_seconds: 300
+  rollback_on_failure: true
+  
+  # Version compatibility
+  backward_compatibility_versions: 2
+  forward_compatibility_check: true
+  version_validation_strict: true
+  
+  # Data migration
+  batch_size: 1000
+  migration_progress_reporting: true
+  parallel_migration: false
+
+# === EXPERIMENTAL FEATURES ===
+experimental:
+  # Advanced learning
+  meta_learning_enabled: false
+  self_modifying_graphs: false
+  automated_contract_tuning: false
+  
+  # Multi-agent features
+  distributed_state_sync: false
+  cross_agent_memory_sharing: false
+  conflict_resolution_enabled: false
+  
+  # Advanced compression
+  neural_compression: false
+  adaptive_context_windows: false
+  predictive_caching: false
+  
+  # Integration features
+  external_knowledge_bases: false
+  api_driven_state_sharing: false
+  real_time_collaboration: false
+
+# === DEBUGGING AND DEVELOPMENT ===
+debug:
+  # Development mode
+  development_mode: false
+  verbose_logging: false
+  debug_graph_visualization: false
+  
+  # Testing and validation
+  enable_test_mode: false
+  mock_external_services: false
+  deterministic_behavior: false
+  
+  # Performance profiling
+  enable_profiling: false
+  profile_memory_usage: false
+  profile_computation_time: false
+  
+  # Debugging tools
+  graph_export_enabled: true
+  state_inspection_enabled: true
+  context_debugging: false

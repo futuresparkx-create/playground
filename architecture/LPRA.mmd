@@ -1,0 +1,107 @@
+```mermaid
+flowchart TD
+    %% LPRA - Long-term Persistent Reasoning Architecture
+    %% Version: 1.0.0
+    %% Last Updated: 2025-11-23
+    %% Maintainer: AI Code Improvement Playground
+
+    %% --- Layer 1: Semantic Graph Layer ---
+    subgraph L1[🧠 Semantic Graph Layer]
+        direction TB
+        A[Nodes:<br/>- Concepts<br/>- Agents<br/>- Tasks<br/>- Goals<br/>- Entities<br/>- Events<br/>- Code Artifacts]
+        B[Edges:<br/>Typed Relations<br/>(causal, temporal, semantic,<br/>dependency, ownership,<br/>improvement, validation)]
+        C[Mechanisms:<br/>- Time-weighted decay<br/>- Reinforcement learning<br/>- Hierarchical typing<br/>- Principled pruning<br/>- Semantic clustering]
+        
+        A -.-> B
+        B -.-> C
+        C -.-> A
+    end
+
+    %% --- Layer 2: Structured State Layer ---
+    subgraph L2[⚙️ Structured State Layer]
+        direction TB
+        D[Canonical State Schema<br/>- Node definitions<br/>- Edge specifications<br/>- Metadata standards]
+        E[Machine State Store<br/>(LanceDB + SQLite)<br/>- Vector embeddings<br/>- Relational data<br/>- Time series]
+        F[Derivation Engine<br/>Graph → Canonical State<br/>- State computation<br/>- Consistency checks<br/>- Version migration]
+        
+        D --> F
+        F --> E
+        E --> D
+    end
+
+    %% --- Layer 3: Surface Context Layer ---
+    subgraph L3[📋 Surface Context Layer]
+        direction TB
+        G[Dynamic Context Compression<br/>- Relevance scoring<br/>- Sliding window<br/>- Attention mechanisms]
+        H[Human-Readable Synopsis<br/>- Natural language summaries<br/>- Visual representations<br/>- Progress tracking]
+        I[LLM-Target Summary<br/>- Token-optimized context<br/>- Task-relevant window<br/>- Structured prompts]
+        
+        G --> H
+        G --> I
+        H -.-> I
+    end
+
+    %% --- Core System Integration ---
+    subgraph Core[🏗️ Core System Components]
+        direction LR
+        J[Orchestrator<br/>ImprovementGraph]
+        K[Processing Nodes<br/>Generate/Test/Reflect/Learn]
+        L[Model Factory<br/>LLM Management]
+        M[Configuration<br/>System Settings]
+    end
+
+    %% --- External Interfaces ---
+    subgraph External[🌐 External Interfaces]
+        direction TB
+        X[Agent Runtime<br/>- Task execution<br/>- State updates<br/>- Learning cycles]
+        Y[Human Operator<br/>- Oversight<br/>- Feedback<br/>- Goal setting]
+        Z[API Endpoints<br/>- State queries<br/>- Context retrieval<br/>- System control]
+    end
+
+    %% --- Layer Interactions ---
+    A --> F
+    B --> F
+    C --> F
+    
+    F --> D
+    F --> E
+    
+    D --> G
+    E --> G
+    
+    G --> H
+    G --> I
+
+    %% --- Core System Connections ---
+    J --> A
+    K --> A
+    K --> B
+    L --> F
+    M --> D
+
+    %% --- External Connections ---
+    X --> A
+    X --> B
+    A --> X
+    B --> X
+    
+    Y --> H
+    H --> Y
+    
+    I --> X
+    Z --> E
+    Z --> H
+
+    %% --- Styling ---
+    classDef layer1 fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    classDef layer2 fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    classDef layer3 fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
+    classDef core fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    classDef external fill:#fce4ec,stroke:#880e4f,stroke-width:2px
+
+    class L1,A,B,C layer1
+    class L2,D,E,F layer2
+    class L3,G,H,I layer3
+    class Core,J,K,L,M core
+    class External,X,Y,Z external
+```

@@ -11,6 +11,7 @@ from typing import Optional
 
 from config.config_manager import ConfigManager, ConfigurationError
 from orchestrator.graph import ImprovementGraph
+from memory.lpra_integration import LPRAManager, LPRAIntegratedGraph
 from ui.dashboard.monitor import Dashboard
 from models.model_factory import ModelFactory
 from security.validators import InputValidator, RateLimiter
@@ -35,23 +36,26 @@ class PlaygroundApp:
     Manages the application lifecycle, configuration, and user interaction.
     """
     
-    def __init__(self, config_dir: Optional[Path] = None):
+    def __init__(self, config_dir: Optional[Path] = None, enable_lpra: bool = True):
         """
         Initialize the playground application.
         
         Args:
             config_dir: Optional custom configuration directory
+            enable_lpra: Whether to enable LPRA architecture (default: True)
         """
         self.config_manager = ConfigManager(config_dir)
         self.graph: Optional[ImprovementGraph] = None
+        self.lpra_manager: Optional[LPRAManager] = None
         self.dashboard: Optional[Dashboard] = None
         self.rate_limiter = RateLimiter(max_calls=100, time_window=3600)  # 100 calls per hour
+        self.enable_lpra = enable_lpra
         
         # Setup signal handlers for graceful shutdown
         signal.signal(signal.SIGINT, self._signal_handler)
         signal.signal(signal.SIGTERM, self._signal_handler)
         
-        logger.info("PlaygroundApp initialized")
+        logger.info(f"PlaygroundApp initialized (LPRA: {'enabled' if enable_lpra else 'disabled'})")
     
     def initialize(self) -> None:
         """
@@ -68,8 +72,19 @@ class PlaygroundApp:
             config = self.config_manager.load_config()
             logger.info("Configuration loaded successfully")
             
-            # Initialize components
-            self.graph = ImprovementGraph(config)
+            # Initialize LPRA if enabled
+            if self.enable_lpra:
+                try:
+                    self.lpra_manager = LPRAManager()
+                    self.graph = LPRAIntegratedGraph(config, self.lpra_manager)
+                    logger.info("LPRA architecture initialized successfully")
+                except Exception as e:
+                    logger.warning(f"LPRA initialization failed, falling back to standard graph: {e}")
+                    self.graph = ImprovementGraph(config)
+                    self.enable_lpra = False
+            else:
+                self.graph = ImprovementGraph(config)
+            
             self.dashboard = Dashboard()
             
             logger.info("Playground initialization completed")
@@ -124,6 +139,9 @@ class PlaygroundApp:
                 elif task.lower() == 'config':
                     self._show_config()
                     continue
+                elif task.lower() == 'summary':
+                    self._show_lpra_summary()
+                    continue
                 
                 # Process the task
                 self._process_task(task)
@@ -170,11 +188,12 @@ class PlaygroundApp:
     
     def _show_help(self) -> None:
         """Show help information."""
-        help_text = """
+        help_text = f"""
 📚 Available Commands:
    help     - Show this help message
    stats    - Show system statistics
    config   - Show current configuration
+   {'summary  - Show LPRA system summary' if self.enable_lpra else ''}
    quit/exit/q - Exit the application
 
 💡 Usage Tips:
@@ -189,6 +208,13 @@ class PlaygroundApp:
    • Input validation and sanitization
    • Rate limiting to prevent abuse
    • Comprehensive logging for audit trails
+   {'• LPRA persistent reasoning and memory' if self.enable_lpra else ''}
+
+🧠 LPRA Features {'(Enabled)' if self.enable_lpra else '(Disabled)'}:
+   {'• Semantic graph for knowledge representation' if self.enable_lpra else ''}
+   {'• Structured state management and versioning' if self.enable_lpra else ''}
+   {'• Dynamic context compression for LLMs' if self.enable_lpra else ''}
+   {'• Human-readable progress summaries' if self.enable_lpra else ''}
 """
         print(help_text)
     
@@ -211,6 +237,15 @@ class PlaygroundApp:
             remaining = self.rate_limiter.get_remaining_calls()
             print(f"   • Rate limit remaining: {remaining} calls")
             
+            # LPRA stats if enabled
+            if self.enable_lpra and self.lpra_manager:
+                lpra_stats = self.lpra_manager.get_system_statistics()
+                lpra_manager_stats = lpra_stats.get("lpra_manager", {})
+                print(f"   • LPRA nodes created: {lpra_manager_stats.get('nodes_created', 0)}")
+                print(f"   • LPRA edges created: {lpra_manager_stats.get('edges_created', 0)}")
+                print(f"   • LPRA states computed: {lpra_manager_stats.get('states_computed', 0)}")
+                print(f"   • LPRA contexts generated: {lpra_manager_stats.get('contexts_generated', 0)}")
+            
         except Exception as e:
             logger.error(f"Failed to get stats: {e}")
             print(f"❌ Failed to get statistics: {e}")
@@ -230,6 +265,20 @@ class PlaygroundApp:
             logger.error(f"Failed to show config: {e}")
             print(f"❌ Failed to show configuration: {e}")
     
+    def _show_lpra_summary(self) -> None:
+        """Show LPRA system summary."""
+        if not self.enable_lpra or not self.lpra_manager:
+            print("❌ LPRA is not enabled or not initialized")
+            return
+        
+        try:
+            summary = self.lpra_manager.get_human_summary()
+            print("\n" + summary)
+            
+        except Exception as e:
+            logger.error(f"Failed to get LPRA summary: {e}")
+            print(f"❌ Failed to get LPRA summary: {e}")
+    
     def _signal_handler(self, signum, frame):
         """Handle shutdown signals gracefully."""
         logger.info(f"Received signal {signum}, shutting down gracefully...")
@@ -248,6 +297,10 @@ class PlaygroundApp:
         try:
             # Cleanup model factory
             ModelFactory.cleanup_all()
+            
+            # Cleanup LPRA if initialized
+            if self.lpra_manager:
+                self.lpra_manager.cleanup()
             
             # Cleanup graph if initialized
             if self.graph:

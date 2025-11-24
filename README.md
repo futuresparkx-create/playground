@@ -1,6 +1,6 @@
 # AI Code Improvement Playground
 
-A safe, human-supervised AI system for code generation, analysis, and improvement using advanced language models with comprehensive safety mechanisms and enterprise-grade architecture.
+A safe, human-supervised AI system for code generation, analysis, and improvement using advanced language models with comprehensive safety mechanisms, enterprise-grade architecture, and **LPRA (Long-term Persistent Reasoning Architecture)** for intelligent memory and reasoning.
 
 ## 🏗️ Architecture Overview
 
@@ -13,17 +13,43 @@ This system implements a controlled AI code improvement pipeline with the follow
 - **Processing Nodes**: Specialized components with consistent interfaces and error handling
 - **Model Factory**: Singleton pattern for efficient model instance management
 - **Security Layer**: Comprehensive input validation, sanitization, and security checks
+- **LPRA Architecture**: 3-layer persistent reasoning system with semantic graphs and intelligent memory
 - **Memory System**: LanceDB-based storage with semantic embeddings for episode logging
 - **Testing Infrastructure**: Comprehensive test suite with fixtures and mocking
+
+### 🧠 LPRA (Long-term Persistent Reasoning Architecture)
+
+The system now includes a revolutionary 3-layer architecture for persistent AI reasoning:
+
+#### Layer 1: Semantic Graph Layer
+- **Nodes**: Concepts, agents, tasks, goals, entities, events, and code artifacts
+- **Edges**: Typed relationships (causal, temporal, semantic, dependency, ownership, improvement, validation)
+- **Mechanisms**: Time-weighted decay, reinforcement learning, hierarchical typing, principled pruning, semantic clustering
+
+#### Layer 2: Structured State Layer
+- **Canonical State Schema**: Formal definitions with Pydantic validation
+- **Machine State Store**: Dual storage (SQLite + LanceDB) for relational and vector data
+- **Derivation Engine**: Graph-to-state computation with consistency checking and version migration
+
+#### Layer 3: Surface Context Layer
+- **Dynamic Context Compression**: Relevance scoring, sliding window, attention mechanisms
+- **Human-Readable Synopsis**: Natural language summaries, visual representations, progress tracking
+- **LLM-Target Summary**: Token-optimized context, task-relevant windows, structured prompts
 
 ### System Flow
 
 ```
-User Input → Security Validation → Orchestrator → [Generate → Reflect → Test → Learn] → Dashboard Output
-                                      ↓
-                                  Memory Store (LanceDB)
-                                      ↓
-                                  Model Factory (Cached Instances)
+User Input → Security Validation → LPRA-Enhanced Orchestrator → [Generate → Reflect → Test → Learn]
+                                           ↓                              ↓
+                                    LPRA Layer 1: Semantic Graph    Dashboard Output
+                                           ↓                              ↓
+                                    LPRA Layer 2: Structured State   Human Summary
+                                           ↓                              ↓
+                                    LPRA Layer 3: Surface Context    LLM Context
+                                           ↓
+                                    Memory Store (LanceDB + SQLite)
+                                           ↓
+                                    Model Factory (Cached Instances)
 ```
 
 ## 🚀 Quick Start
@@ -68,11 +94,19 @@ python main.py
 ```
 
 The system provides an interactive CLI with the following features:
-- **Task Processing**: Enter coding tasks for AI-assisted development
+- **Task Processing**: Enter coding tasks for AI-assisted development with LPRA memory
 - **Safety Checks**: Comprehensive input validation and sanitization
 - **Rate Limiting**: Prevents abuse with configurable limits
-- **Statistics**: View system performance and usage metrics
+- **Statistics**: View system performance and usage metrics including LPRA statistics
+- **LPRA Summary**: View human-readable summaries of the persistent reasoning state
 - **Help System**: Built-in help and command reference
+
+### Available Commands
+- `help` - Show help information
+- `stats` - Show system statistics (including LPRA metrics)
+- `config` - Show current configuration
+- `summary` - Show LPRA system summary (human-readable progress report)
+- `quit/exit/q` - Exit the application
 
 ## 📁 Project Structure
 
@@ -104,8 +138,12 @@ playground/
 │   ├── __init__.py
 │   ├── exceptions.py       # Custom exception hierarchy
 │   └── logging_config.py   # Structured logging with security filtering
-├── memory/                 # Memory and storage systems
-│   └── memory.py          # LanceDB integration with embeddings
+├── memory/                 # LPRA Memory and storage systems
+│   ├── memory.py          # LanceDB integration with embeddings
+│   ├── semantic_graph.py  # LPRA Layer 1: Semantic graph with nodes, edges, mechanisms
+│   ├── structured_state.py # LPRA Layer 2: Canonical state schema and derivation engine
+│   ├── surface_context.py # LPRA Layer 3: Context compression and human summaries
+│   └── lpra_integration.py # LPRA integration layer and manager
 ├── ui/                    # User interface components
 │   └── dashboard/         # Console-based monitoring
 │       └── monitor.py     # Enhanced result display
@@ -118,6 +156,13 @@ playground/
 │   └── test_integration.py # Integration tests
 ├── finetune/             # Fine-tuning pipeline (human-gated)
 │   └── trainer.py        # Dataset preparation and training scaffold
+├── architecture/         # LPRA Architecture documentation
+│   ├── LPRA.mmd         # Mermaid architecture blueprint
+│   ├── LPRA.md          # Comprehensive LPRA documentation
+│   └── changelog.md     # Architecture change tracking
+├── scripts/             # Automation and maintenance scripts
+│   ├── generate_architecture_summary.py # Auto-generate architecture docs
+│   └── validate_architecture.py        # Validate LPRA implementation
 ├── monetization/         # Commercial application scaffolds
 │   ├── pr_agent/         # PR suggestion agent (safe-only)
 │   └── vscode_extension/ # VS Code extension skeleton
@@ -158,6 +203,30 @@ tools:
     - weight_updates          # Safety: No model modifications
 ```
 
+### LPRA Configuration (`config/lpra.yaml`)
+```yaml
+# Semantic Graph Layer (Layer 1)
+semantic_graph:
+  max_graph_nodes: 10000
+  success_boost: 1.2
+  base_decay_rate: 0.95
+  edge_strength_threshold: 0.2
+
+# Structured State Layer (Layer 2)  
+structured_state:
+  consistency_level: "strict"
+  max_stored_states: 1000
+  sqlite_db_path: "data/lpra_states.db"
+  lancedb_path: "data/lpra_vectors"
+
+# Surface Context Layer (Layer 3)
+surface_context:
+  max_context_tokens: 4000
+  relevance_threshold: 0.5
+  cache_ttl_minutes: 30
+  default_compression_strategy: "relevance_based"
+```
+
 ## 🛡️ Safety Features
 
 This system is designed with multiple safety layers:
@@ -171,6 +240,7 @@ This system is designed with multiple safety layers:
 7. **Structured Logging**: Comprehensive audit trails with security filtering
 8. **No Model Updates**: Learning logs data but doesn't modify model weights
 9. **No External Actions**: Cannot submit PRs or modify external systems
+10. **LPRA Safety**: Persistent reasoning with bounded memory and principled decay mechanisms
 
 ## 🔧 Major Refactoring Improvements
 
@@ -226,6 +296,11 @@ This codebase has been significantly refactored to implement enterprise-grade ar
 - **Benefits**: Better user experience, built-in help, statistics
 - **Files**: `main.py` with enhanced PlaygroundApp class
 
+### 11. LPRA Architecture Implementation
+- **Implementation**: 3-layer persistent reasoning architecture with semantic graphs
+- **Benefits**: Long-term memory, intelligent context compression, human-readable summaries
+- **Files**: `memory/semantic_graph.py`, `memory/structured_state.py`, `memory/surface_context.py`, `memory/lpra_integration.py`
+
 ## 🔧 Advanced Usage
 
 ### Memory Queries
@@ -236,6 +311,26 @@ from memory.memory import MemoryStore
 
 memory = MemoryStore()
 results = memory.fetch_semantic("error handling patterns", k=5)
+```
+
+### LPRA Usage
+Access the LPRA system for persistent reasoning:
+
+```python
+from memory.lpra_integration import LPRAManager
+
+# Initialize LPRA
+lpra = LPRAManager()
+
+# Add knowledge to semantic graph
+lpra.semantic_graph.add_concept("error_handling", {"type": "pattern", "importance": 0.8})
+
+# Get human-readable summary
+summary = lpra.get_human_summary()
+print(summary)
+
+# Get LLM-optimized context
+context = lpra.get_llm_context(task="implement error handling")
 ```
 
 ### Custom Node Development
@@ -258,8 +353,14 @@ class CustomNode(BaseNode):
 - ✅ Static analysis pipeline
 - ✅ LanceDB memory system
 - ✅ Safety mechanisms
+- ✅ LPRA 3-layer architecture
+- ✅ Semantic graph with reinforcement learning
+- ✅ Structured state management
+- ✅ Dynamic context compression
+- ✅ Human-readable summaries
 
 ### In Development
+- 🔄 LPRA versioning system and state migration
 - 🔄 Fine-tuning pipeline
 - 🔄 PR agent capabilities
 - 🔄 VS Code extension
